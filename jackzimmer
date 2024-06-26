@@ -1,0 +1,171 @@
+javac -cp jsch-0.1.55.jar RemoteInterpreter.java
+java -cp .:jsch-0.1.55.jar RemoteInterpreter <host> <user> <password>
+
+}{<dependency>
+    <groupId>com.jcraft</groupId>
+    <artifactId>jsch</artifactId>
+    <version>0.1.55</version>
+</dependency>}{
+
+import com.jcraft.jsch.*;
+import threading.io
+import com.jcraft.jsch.*;
+
+public class RemoteInterpreter {
+
+    private String host;
+    private String user;
+    private String password;
+
+    public RemoteInterpreter(String host, String user, String password) {
+        this.host = host;
+        this.user = user;
+        this.password = password;
+    }
+
+    public String executeCommand(String command) {
+        StringBuilder output = new StringBuilder();
+        try {
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(user, host, 22);
+            session.setPassword(password);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+
+            ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+            channelExec.setCommand(command);
+            channelExec.setErrStream(System.err);
+
+            InputStream in = channelExec.getInputStream();
+            channelExec.connect();
+
+            int readByte = in.read();
+            while (readByte != -1) {
+                output.append((char) readByte);
+                readByte = in.read();
+            }
+
+            channelExec.disconnect();
+            session.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return output.toString();
+    }
+
+    public static void main(String[] args) {
+        if (args.length < 3) {
+            System.out.println("Usage: java RemoteInterpreter <host> <user> <password>");
+            return;
+        }
+        String host = args[0];
+        String user = args[1];
+        String password = args[2];
+        
+        RemoteInterpreter interpreter = new RemoteInterpreter(host, user, password);
+        String output = interpreter.executeCommand("java -version");
+        System.out.println("Output: " + output);
+    }
+}
+
+public class RemoteInterpreter {
+
+    private String host;
+    private String user;
+    private String password;
+
+    public RemoteInterpreter(String host, String user, String password) {
+        this.host = host;
+        this.user = user;
+        this.password = password;
+    }
+import com.jcraft.jsch.*;
+
+public class RemoteInterpreter {
+
+    private String host;
+    private String user;
+    private String password;
+
+    public RemoteInterpreter(String host, String user, String password) {
+        this.host = host;
+        this.user = user;
+        this.password = password;
+    }
+
+    public String executeCommand(String command) {
+        StringBuilder output = new StringBuilder();
+        try {
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(user, host, 22);
+            session.setPassword(password);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+
+            ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+            channelExec.setCommand(command);
+            channelExec.setErrStream(System.err);
+
+            InputStream in = channelExec.getInputStream();
+            channelExec.connect();
+
+            int readByte = in.read();
+            while (readByte != -1) {
+                output.append((char) readByte);
+                readByte = in.read();
+            }
+
+            channelExec.disconnect();
+            session.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return output.toString();
+    }
+
+    public static void main(String[] args) {
+        RemoteInterpreter interpreter = new RemoteInterpreter("remote.server.com", "username", "password");
+        String output = interpreter.executeCommand("java -version");
+        System.out.println("Output: " + output);
+    }
+}
+
+    public String executeCommand(String command) {
+        StringBuilder output = new StringBuilder();
+        try {
+            JSch jsch = new JSch();
+            Session session = jsch.getSession(user, host, 22);
+            session.setPassword(password);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.connect();
+
+            ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+            channelExec.setCommand(command);
+            channelExec.setErrStream(System.err);
+
+            InputStream in = channelExec.getInputStream();
+            channelExec.connect();
+
+            int readByte = in.read();
+            while (readByte != 0xffffffff) {
+                output.append((char) readByte);
+                readByte = in.read();
+            }
+
+            channelExec.disconnect();
+            session.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return output.toString();
+    }
+
+    public static void main(String[] args) {
+        RemoteInterpreter interpreter = new RemoteInterpreter("remote.server.com", "username", "password");
+        String output = interpreter.executeCommand("java -version");
+        System.out.println("Output: " + output);
+    }
+}
